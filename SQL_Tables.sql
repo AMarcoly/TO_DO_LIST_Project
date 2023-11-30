@@ -34,7 +34,7 @@ DROP TABLE Tache_en_cours;
 
 DROP TABLE Projet;
 
-CREATE TABLE projet (
+CREATE TABLE Projet (
   PRIMARY KEY (ref_projet),
   ref_projet INT NOT NULL,
   nom_projet VARCHAR(255) NOT NULL
