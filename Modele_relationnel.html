@@ -1,0 +1,158 @@
+<div class="mld">
+<div>
+  <details><summary><span class='relation'>Comporte</span> (
+    <span class='primary'>nom_programme STRING</span>,
+    <span class='foreign primary'>#réf_score_catégorie_tâche INT</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>nom_programme</i> fait partie de la clé primaire de la table. Sa table d'origine (<i>Programme_de_score</i>) ayant été supprimée, il n'est pas considéré comme clé étrangère.</li>
+    <li>Le champ <i>réf_score_catégorie_tâche</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Score_catégorie_tâche</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Contient</span> (
+    <span class='primary'>nom_projet STRING</span>,
+    <span class='foreign primary'>#réf_liste INT</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>nom_projet</i> fait partie de la clé primaire de la table. Sa table d'origine (<i>Projet</i>) ayant été supprimée, il n'est pas considéré comme clé étrangère.</li>
+    <li>Le champ <i>réf_liste</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Liste_tâche</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Dépend_de</span> (
+    <span class='foreign primary'>#réf_tâche 1 INT</span>,
+    <span class='foreign primary'>#réf_tâche 2 INT</span>
+  )</summary>
+  <ul>
+    <li>Les champs <i>réf_tâche 1</i> et <i>réf_tâche 2</i> constituent la clé primaire de la table. Ce sont des clés étrangères qui ont migré directement à partir de l'entité <i>Tâche</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Est_assigné</span> (
+    <span class='foreign primary'>#réf_utilisateur INT</span>,
+    <span class='foreign primary'>#réf_tâche INT</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>réf_utilisateur</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Utilisateur</i>.</li>
+    <li>Le champ <i>réf_tâche</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Tâche</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Liste_tâche</span> (
+    <span class='primary'>réf_liste INT</span>,
+    <span class='normal'>nom_catégorie! STRING</span>,
+    <span class='foreign'>#réf_utilisateur! INT</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>réf_liste</i> constitue la clé primaire de la table. C'était déjà un identifiant de l'entité <i>Liste_tâche</i>.</li>
+    <li>Le champ à saisie obligatoire <i>nom_catégorie</i> est un simple attribut. Il a migré par l'association de dépendance fonctionnelle <i>a_LC</i> à partir de l'entité <i>Catégorie</i> en perdant son caractère identifiant. Cependant, comme la table créée à partir de cette entité a été supprimée, il n'est pas considéré comme clé étrangère.</li>
+    <li>Le champ à saisie obligatoire <i>réf_utilisateur</i> est une clé étrangère. Il a migré par l'association de dépendance fonctionnelle <i>Définit</i> à partir de l'entité <i>Utilisateur</i> en perdant son caractère identifiant.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Périodicité</span> (
+    <span class='primary'>ref_periodicite TIMESTAMP</span>,
+    <span class='normal'>date_début TIMESTAMP</span>,
+    <span class='normal'>date_fin TIMESTAMP</span>,
+    <span class='normal'>période INTERVAL</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>ref_periodicite</i> constitue la clé primaire de la table. C'était déjà un identifiant de l'entité <i>Périodicité</i>.</li>
+    <li>Les champs <i>date_fin</i> et <i>période</i> étaient déjà de simples attributs de l'entité <i>Périodicité</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Score_catégorie_tâche</span> (
+    <span class='primary'>réf_score_catégorie_tâche INT</span>,
+    <span class='normal'>terminé BOOLEAN</span>,
+    <span class='normal'>score INT</span>,
+    <span class='normal'>nom_catégorie! STRING</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>réf_score_catégorie_tâche</i> constitue la clé primaire de la table. C'était déjà un identifiant de l'entité <i>Score_catégorie_tâche</i>.</li>
+    <li>Les champs <i>terminé</i> et <i>score</i> étaient déjà de simples attributs de l'entité <i>Score_catégorie_tâche</i>.</li>
+    <li>Le champ à saisie obligatoire <i>nom_catégorie</i> est un simple attribut. Il a migré par l'association de dépendance fonctionnelle <i>a_SC</i> à partir de l'entité <i>Catégorie</i> en perdant son caractère identifiant. Cependant, comme la table créée à partir de cette entité a été supprimée, il n'est pas considéré comme clé étrangère.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Tâche</span> (
+    <span class='primary'>réf_tâche INT</span>,
+    <span class='normal'>intitulé STRING</span>,
+    <span class='normal'>description TEXT</span>,
+    <span class='normal'>priorité STRING</span>,
+    <span class='normal'>url STRING</span>,
+    <span class='normal'>date_d_échéance TIMESTAMP</span>,
+    <span class='normal'>statut STRING</span>,
+    <span class='normal'>nom_catégorie! STRING</span>,
+    <span class='foreign'>#ref_periodicite INT</span> <sup>u1</sup>,
+    <span class='foreign'>#réf_utilisateur! INT</span>,
+    <span class='normal'>date_réalisation? TIMESTAMP</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>réf_tâche</i> constitue la clé primaire de la table. C'était déjà un identifiant de l'entité <i>Tâche</i>.</li>
+    <li>Les champs <i>intitulé</i>, <i>description</i>, <i>priorité</i>, <i>url</i>, <i>date_d_échéance</i> et <i>statut</i> étaient déjà de simples attributs de l'entité <i>Tâche</i>.</li>
+    <li>Le champ à saisie obligatoire <i>nom_catégorie</i> est un simple attribut. Il a migré par l'association de dépendance fonctionnelle <i>a_TC</i> à partir de l'entité <i>Catégorie</i> en perdant son caractère identifiant. Cependant, comme la table créée à partir de cette entité a été supprimée, il n'est pas considéré comme clé étrangère.</li>
+    <li>Le champ <i>ref_periodicite</i> est une clé étrangère. Il a migré par l'association de dépendance fonctionnelle <i>Se_répéte</i> à partir de l'entité <i>Périodicité</i> en perdant son caractère identifiant. Il obéit en outre à la contrainte d'unicité 1.</li>
+    <li>Le champ à saisie obligatoire <i>réf_utilisateur</i> est une clé étrangère. Il a migré par l'association de dépendance fonctionnelle <i>Crée</i> à partir de l'entité <i>Utilisateur</i> en perdant son caractère identifiant.</li>
+    <li>Le champ à saisie facultative <i>date_réalisation</i> a migré à partir de l'entité-fille <i>Tâche_passée</i> (supprimée).</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Tâche_appartenant_à_liste</span> (
+    <span class='foreign primary'>#réf_liste INT</span>,
+    <span class='foreign primary'>#réf_tâche INT</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>réf_liste</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Liste_tâche</i>.</li>
+    <li>Le champ <i>réf_tâche</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Tâche</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Travaille</span> (
+    <span class='primary'>nom_projet STRING</span>,
+    <span class='foreign primary'>#réf_utilisateur INT</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>nom_projet</i> fait partie de la clé primaire de la table. Sa table d'origine (<i>Projet</i>) ayant été supprimée, il n'est pas considéré comme clé étrangère.</li>
+    <li>Le champ <i>réf_utilisateur</i> fait partie de la clé primaire de la table. C'est une clé étrangère qui a migré directement à partir de l'entité <i>Utilisateur</i>.</li>
+  </ul></details>
+</div>
+
+<div>
+  <details><summary><span class='relation'>Utilisateur</span> (
+    <span class='primary'>réf_utilisateur INT</span>,
+    <span class='normal'>login STRING</span> <sup>u1</sup>,
+    <span class='normal'>mot_de_passe STRING</span>,
+    <span class='normal'>score INT</span>,
+    <span class='normal'>nom STRING</span>,
+    <span class='normal'>prenom STRING</span>,
+    <span class='normal'>adresse STRING</span>,
+    <span class='normal'>pays STRING</span>,
+    <span class='normal'>date_de_naissance DATE</span>,
+    <span class='normal'>date_d_inscription DATE</span>,
+    <span class='normal'>nom_programme? STRING</span>
+  )</summary>
+  <ul>
+    <li>Le champ <i>réf_utilisateur</i> constitue la clé primaire de la table. C'était déjà un identifiant de l'entité <i>Utilisateur</i>.</li>
+    <li>Le champ <i>login</i> était déjà un simple attribut de l'entité <i>Utilisateur</i>. Il obéit à la contrainte d'unicité 1.</li>
+    <li>Les champs <i>mot_de_passe</i>, <i>score</i>, <i>nom</i>, <i>prenom</i>, <i>adresse</i>, <i>pays</i>, <i>date_de_naissance</i> et <i>date_d_inscription</i> étaient déjà de simples attributs de l'entité <i>Utilisateur</i>.</li>
+    <li>Le champ à saisie facultative <i>nom_programme</i> est un simple attribut. Il a migré par l'association de dépendance fonctionnelle <i>Utilise</i> à partir de l'entité <i>Programme_de_score</i> en perdant son caractère identifiant. Cependant, comme la table créée à partir de cette entité a été supprimée, il n'est pas considéré comme clé étrangère.</li>
+  </ul></details>
+</div>
+
+<br><hr>
+
+<div>
+  <span><strong>NB.</strong> Les relations <i>Catégorie</i>, <i>Programme_de_score</i> et <i>Projet</i> n'ont pas été conservées et transformées en attribut.</span>
+</div>
+</div>
