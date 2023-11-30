@@ -32,6 +32,13 @@ DROP TABLE Utilisateur;
 DROP TABLE Tache_fini;
 DROP TABLE Tache_en_cours;
 
+DROP TABLE Projet;
+
+CREATE TABLE projet (
+  PRIMARY KEY (ref_projet),
+  ref_projet INT NOT NULL,
+  nom_projet VARCHAR(255) NOT NULL
+);
 CREATE TABLE Comporte (
   PRIMARY KEY (nom_programme, ref_score_categorie_tache),
   nom_programme             VARCHAR(255) NOT NULL,
