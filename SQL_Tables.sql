@@ -32,6 +32,8 @@ DROP TABLE Tache;
 DROP TABLE Tache_appartenant_a_liste;
 DROP TABLE Travaille;
 DROP TABLE Utilisateur;
+DROP TABLE Tache_fini;
+DROP TABLE Tache_en_cours;
 
 CREATE TABLE Comporte (
   PRIMARY KEY (nom_programme, ref_score_categorie_tache),
@@ -160,10 +162,10 @@ ALTER TABLE Est_assigne ADD CONSTRAINT FK_EST_ASSIGNE_REFUTILISATEUR FOREIGN KEY
 
 ALTER TABLE Liste_tache ADD CONSTRAINT FK_LISTETACHE_REFUTILISATEUR FOREIGN KEY (ref_utilisateur) REFERENCES Utilisateur (ref_utilisateur);
 
-ALTER TABLE Tache_fini ADD CONSTRAINT FK_TACHE_FINI_REF FOREIGN KEY (ref_tache) REFERENCES Taches (ref_tache);
+ALTER TABLE Tache_fini ADD CONSTRAINT FK_TACHE_FINI_REF FOREIGN KEY (ref_tache) REFERENCES Tache (ref_tache);
 ALTER TABLE Tache_fini ADD CONSTRAINT FK_TACHE_FINI_REF_REFUTILISATEUR FOREIGN KEY (ref_utilisateur) REFERENCES Utilisateur (ref_utilisateur);
 ALTER TABLE Tache_fini ADD CONSTRAINT FK_TACHE_FINI_REFPERIODICITE FOREIGN KEY (ref_periodicite) REFERENCES Periodicite (ref_periodicite);
-ALTER TABLE Tache_en_cours ADD CONSTRAINT FK_TACHE_EN_COURS_REF FOREIGN KEY (ref_tache) REFERENCES Taches (ref_tache);
+ALTER TABLE Tache_en_cours ADD CONSTRAINT FK_TACHE_EN_COURS_REF FOREIGN KEY (ref_tache) REFERENCES Tache (ref_tache);
 ALTER TABLE Tache_en_cours ADD CONSTRAINT FK_TACHE_EN_COURS_REFUTILISATEUR FOREIGN KEY (ref_utilisateur) REFERENCES Utilisateur (ref_utilisateur);
 ALTER TABLE Tache_en_cours ADD CONSTRAINT FK_TACHE_EN_COURS_REFPERIODICITE FOREIGN KEY (ref_periodicite) REFERENCES Periodicite (ref_periodicite);
 ALTER TABLE Tache_appartenant_a_liste ADD CONSTRAINT FK_TACHELISTE_REFTACHE FOREIGN KEY (ref_tache) REFERENCES Tache (ref_tache);
