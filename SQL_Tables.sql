@@ -177,3 +177,10 @@ ALTER TABLE Tache_appartenant_a_liste ADD CONSTRAINT FK_TACHELISTE_REFLISTE FORE
 
 ALTER TABLE Travaille ADD CONSTRAINT FK_TRAVAILLE_REFUTILISATEUR FOREIGN KEY (ref_utilisateur) REFERENCES Utilisateur (ref_utilisateur);
 
+-- Ajouter la contrainte de format pour le mot de passe
+ALTER TABLE Utilisateur ADD CONSTRAINT check_mot_de_passe_format 
+    CHECK (REGEXP_LIKE(mot_de_passe, '^[a-zA-Z0-9_]+$'));
+
+-- Ajouter la contrainte de format pour le login
+ALTER TABLE Utilisateur ADD CONSTRAINT check_login_format 
+    CHECK (REGEXP_LIKE(login, '^[a-z]{1}[a-z]{7}[0-9]{2}$'));
