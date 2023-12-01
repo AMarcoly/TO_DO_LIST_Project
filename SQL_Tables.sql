@@ -128,7 +128,7 @@ CREATE TABLE Tache_appartenant_a_liste (
 );
 
 CREATE TABLE Travaille (
-  PRIMARY KEY (nom_projet, ref_utilisateur),
+  PRIMARY KEY (ref_projet, ref_utilisateur),
   nom_projet      VARCHAR(255) NOT NULL,
   ref_utilisateur INT NOT NULL
 );
@@ -178,9 +178,11 @@ ALTER TABLE Tache_appartenant_a_liste ADD CONSTRAINT FK_TACHELISTE_REFLISTE FORE
 ALTER TABLE Travaille ADD CONSTRAINT FK_TRAVAILLE_REFUTILISATEUR FOREIGN KEY (ref_utilisateur) REFERENCES Utilisateur (ref_utilisateur);
 
 -- Ajouter la contrainte de format pour le mot de passe
+-- mot_de_passe : ne peut contenir que des lettres minuscules, des chiffres et un underscore
 ALTER TABLE Utilisateur ADD CONSTRAINT check_mot_de_passe_format 
     CHECK (REGEXP_LIKE(mot_de_passe, '^[a-zA-Z0-9_]+$'));
 
 -- Ajouter la contrainte de format pour le login
+-- login : 1 lettre minuscule, 7 lettres minuscules, 2 chiffres
 ALTER TABLE Utilisateur ADD CONSTRAINT check_login_format 
     CHECK (REGEXP_LIKE(login, '^[a-z]{1}[a-z]{7}[0-9]{2}$'));
