@@ -129,7 +129,7 @@ CREATE TABLE Tache_appartenant_a_liste (
 
 CREATE TABLE Travaille (
   PRIMARY KEY (ref_projet, ref_utilisateur),
-  nom_projet      VARCHAR(255) NOT NULL,
+  ref_projet      VARCHAR(255) NOT NULL,
   ref_utilisateur INT NOT NULL
 );
 
@@ -176,6 +176,7 @@ ALTER TABLE Tache_appartenant_a_liste ADD CONSTRAINT FK_TACHELISTE_REFTACHE FORE
 ALTER TABLE Tache_appartenant_a_liste ADD CONSTRAINT FK_TACHELISTE_REFLISTE FOREIGN KEY (ref_liste) REFERENCES Liste_tache (ref_liste);
 
 ALTER TABLE Travaille ADD CONSTRAINT FK_TRAVAILLE_REFUTILISATEUR FOREIGN KEY (ref_utilisateur) REFERENCES Utilisateur (ref_utilisateur);
+ALTER TABLE Travaille ADD CONSTRAINT FK_TRAVAILLE_REFPROJET FOREIGN KEY (ref_projet) REFERENCES Projet (ref_projet);
 
 -- Ajouter la contrainte de format pour le mot de passe
 -- mot_de_passe : ne peut contenir que des lettres minuscules, des chiffres et un underscore
