@@ -129,7 +129,7 @@ CREATE TABLE Tache_appartenant_a_liste (
 
 CREATE TABLE Travaille (
   PRIMARY KEY (ref_projet, ref_utilisateur),
-  ref_projet      VARCHAR(255) NOT NULL,
+  ref_projet      INT NOT NULL,
   ref_utilisateur INT NOT NULL
 );
 
