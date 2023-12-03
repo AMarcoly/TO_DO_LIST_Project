@@ -33,8 +33,8 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
 
 - Les index sur `date_realisation` de `Tache_fini`, `nom_categorie` de `Score_categorie_tache` et `ref_utilisateur` de `Est_assigne` peuvent améliorer les performances de la jointure et des agrégations pour identifier les utilisateurs ayant gagné le plus de points.
 
-```sql
-CREATE INDEX idx_tache_fini_date_realisation ON Tache_fini(date_realisation);
-CREATE INDEX idx_score_cat_tache_nom_cat ON Score_categorie_tache(nom_categorie);
-CREATE INDEX idx_est_assigne_ref_utilisateur ON Est_assigne(ref_utilisateur);
-```
+  ```sql
+  CREATE INDEX idx_tache_fini_date_realisation ON Tache_fini(date_realisation);
+  CREATE INDEX idx_score_cat_tache_nom_cat ON Score_categorie_tache(nom_categorie);
+  CREATE INDEX idx_est_assigne_ref_utilisateur ON Est_assigne(ref_utilisateur);
+  ```
