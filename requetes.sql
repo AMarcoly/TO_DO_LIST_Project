@@ -9,7 +9,7 @@ HAVING COUNT(TAL.ref_tache) >= 5;
 -- 2.
 SELECT U.nom_programme, SUM(S.score) AS total_points
 FROM Utilisateur U
-JOIN Est_assigne EA ON U.ref_utilisateur = EA.ref_utilisateur
+INNER JOIN Est_assigne EA ON U.ref_utilisateur = EA.ref_utilisateur
 JOIN Tache_fini TF ON EA.ref_tache = TF.ref_tache
 JOIN Score_categorie_tache S ON TF.nom_categorie = S.nom_categorie
 WHERE S.termine = 'O'
@@ -30,6 +30,8 @@ GROUP BY U.login, U.nom, U.prenom, U.adresse;
 SELECT T.ref_tache, COUNT(DISTINCT DD.ref_tache_1) AS nombre_dependances
 FROM Tache T
 LEFT JOIN Depend_de DD ON T.ref_tache = DD.ref_tache_2
+WHERE
+  t.statut <> 'Terminée'
 GROUP BY T.ref_tache;
 
 -- 5.
@@ -42,4 +44,5 @@ WHERE TF.date_realisation >= TRUNC(SYSDATE, 'IW') -- Début de la semaine couran
 AND TF.date_realisation < TRUNC(SYSDATE, 'IW') + 7 -- Fin de la semaine courante
 GROUP BY U.ref_utilisateur, U.login, U.nom, U.prenom
 ORDER BY SUM(SC.score) DESC
-FETCH FIRST 10 ROWS ONLY;
+LIMIT 10;
+-- FETCH FIRST 10 ROWS ONLY;

@@ -32,7 +32,7 @@ VALUES (3, 'rbobbobb99', 'pass_word3', 65, 'Roberts', 'Bob', '789 Elm Avenue', '
 INSERT INTO Utilisateur (ref_utilisateur, login, mot_de_passe, score, nom, 
                         prenom, adresse, pays, date_de_naissance, date_d_inscription, 
                         nom_programme) 
-VALUES (2, 'jsmithsm33', 'password2', 90, 'Jane', 'Smith', '456 Elm St', 'USA',
+VALUES (4, 'jsmithsm33', 'password2', 90, 'Jane', 'Smith', '456 Elm St', 'USA',
          TO_DATE('1985-08-15', 'YYYY-MM-DD'), SYSDATE, 'Programme 2');
 
 INSERT INTO Utilisateur (ref_utilisateur, login, mot_de_passe, score, nom, 
