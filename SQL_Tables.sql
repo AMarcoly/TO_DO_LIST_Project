@@ -149,6 +149,20 @@ CREATE TABLE Utilisateur (
   UNIQUE (login)
 );
 
+CREATE TABLE Tache_archivee (
+    ref_tache          INT,
+    intitule           VARCHAR(255),
+    description        VARCHAR(1000),
+    priorite           INT,
+    url                VARCHAR(255),
+    date_d_echeance    TIMESTAMP,
+    statut             VARCHAR(50),
+    nom_categorie      VARCHAR(255),
+    ref_periodicite    INT,
+    ref_utilisateur    INT,
+    date_realisation   TIMESTAMP
+);
+
 CREATE VIEW Taches AS
   SELECT * FROM Tache_fini
     UNION
