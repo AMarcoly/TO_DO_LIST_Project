@@ -38,3 +38,27 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
   CREATE INDEX idx_score_cat_tache_nom_cat ON Score_categorie_tache(nom_categorie);
   CREATE INDEX idx_est_assigne_ref_utilisateur ON Est_assigne(ref_utilisateur);
   ```
+
+# Procédures et fonctions PL/SQL
+
+2. Afin d'archiver les taches passées, nous devons absolument regarder dans la table `Taches_en_cours` toutes les taches dont la date déchéance est antérieure à la date du jour où la procedure s'execute c'est-à-dire tous les lundis à 8h (Par supposition). Ci-dessus la requete :
+
+   ```sql
+   CREATE OR REPLACE PROCEDURE ArchiverTaches AS
+   BEGIN
+       -- Utilisation de la date actuelle pour identifier les tâches passées
+       FOR tache IN (SELECT * FROM Tache_en_cours WHERE date_d_echeance < SYSDATE) LOOP
+           -- Insérer les tâches passées dans la table d'archivage
+           INSERT INTO Tache_archivee (ref_tache, intitule, description, priorite,
+                                       url, date_d_echeance, statut, nom_categorie,
+                                       ref_periodicite, ref_utilisateur, date_realisation)
+           VALUES (tache.ref_tache, tache.intitule, tache.description, tache.priorite,
+                   tache.url, tache.date_d_echeance, tache.statut, tache.nom_categorie,
+                   tache.ref_periodicite, tache.ref_utilisateur, tache.date_realisation);
+
+           -- Supprimer les tâches archivées de la table Tache_en_cours
+           DELETE FROM Tache_en_cours WHERE ref_tache = tache.ref_tache;
+       END LOOP;
+       COMMIT;
+   END;
+   ```
