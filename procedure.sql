@@ -112,3 +112,35 @@ BEGIN
     END LOOP;
     COMMIT;
 END;
+
+CREATE OR REPLACE FUNCTION SuggestionsTaches(p_utilisateur_actuel INT) RETURN sys_refcursor IS
+    v_utilisateur_actuel INT := p_utilisateur_actuel; -- ID de l'utilisateur actuel
+    v_X INT := 5; -- Nombre minimum de tâches similaires pour considérer un utilisateur comme similaire
+    v_Y INT := 3; -- Nombre minimum de mots en commun pour considérer des tâches comme similaires
+    v_N INT := 10; -- Nombre de tâches suggérées
+
+    v_cursor sys_refcursor;
+
+BEGIN
+    -- Étape 1 : Identifiez les utilisateurs similaires
+    -- Code pour récupérer les utilisateurs similaires (par ex., avec une requête SQL)
+    -- Utilisation de v_utilisateur_actuel dans la requête pour trouver des utilisateurs similaires
+    
+    -- Étape 2 : Comptez les occurrences des tâches pour les utilisateurs similaires
+    -- Code pour compter les occurrences des tâches parmi les utilisateurs similaires
+    
+    -- Étape 3 : Sélectionnez les N tâches les plus fréquentes
+    -- Code pour sélectionner les N tâches les plus fréquentes parmi celles partagées par les utilisateurs similaires
+    
+    -- Affichage ou traitement des suggestions de tâches
+    -- Code pour afficher ou utiliser les tâches suggérées
+    
+    -- Renvoyer un curseur avec les résultats des suggestions de tâches
+    OPEN v_cursor FOR
+        SELECT * FROM table_resultats; -- Remplacez par la table appropriée pour les suggestions
+
+    RETURN v_cursor;
+END;
+/
+
+
