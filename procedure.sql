@@ -113,6 +113,15 @@ BEGIN
     COMMIT;
 END;
 
+CREATE OR REPLACE FUNCTION supprime_stop_words(p_text IN VARCHAR2) RETURN VARCHAR2 IS
+    stop_words VARCHAR2(1000) := 'le|la|les|de|des|du|en|et|à|un|une|ce|cet|cette|ces|mon|ma|mes|ton|ta|tes';
+    cleaned_text VARCHAR2(1000);
+BEGIN
+    cleaned_text := REGEXP_REPLACE(p_text, '\b(' || stop_words || ')\b', '', 1, 0, 'i');
+    RETURN cleaned_text;
+END;
+/
+
 CREATE OR REPLACE FUNCTION SuggestionsTaches(p_utilisateur_actuel INT) RETURN sys_refcursor IS
     v_utilisateur_actuel INT := p_utilisateur_actuel; -- ID de l'utilisateur actuel
     v_X INT := 5; -- Nombre minimum de tâches similaires pour considérer un utilisateur comme similaire
@@ -141,6 +150,5 @@ BEGIN
 
     RETURN v_cursor;
 END;
-/
 
 
