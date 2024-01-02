@@ -95,3 +95,20 @@ BEGIN
   DROP TABLE tmp_taches_a_archiver;
 END archiver_taches_passees;
 
+CREATE OR REPLACE PROCEDURE ArchiverTaches AS
+BEGIN
+    -- Utilisation de la date actuelle pour identifier les tâches passées
+    FOR tache IN (SELECT * FROM Tache_en_cours WHERE date_d_echeance < SYSDATE) LOOP
+        -- Insérer les tâches passées dans la table d'archivage
+        INSERT INTO Tache_archivee (ref_tache, intitule, description, priorite, 
+                                    url, date_d_echeance, statut, nom_categorie, 
+                                    ref_periodicite, ref_utilisateur, date_realisation)
+        VALUES (tache.ref_tache, tache.intitule, tache.description, tache.priorite, 
+                tache.url, tache.date_d_echeance, tache.statut, tache.nom_categorie, 
+                tache.ref_periodicite, tache.ref_utilisateur, tache.date_realisation);
+
+        -- Supprimer les tâches archivées de la table Tache_en_cours
+        DELETE FROM Tache_en_cours WHERE ref_tache = tache.ref_tache;
+    END LOOP;
+    COMMIT;
+END;
