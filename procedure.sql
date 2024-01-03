@@ -27,7 +27,28 @@ BEGIN
             AND statut != 'Terminé';
 
         -- Calculer les points gagnés ou perdus
-        points_gagnes_perdus := nombre_taches_termines - nombre_taches_non_termines;
+
+        -- Le score sera calculé d'après la proportion les taches 
+        --terminées/non terminées
+        points_gagnes_perdus := 0;
+        -- Calculer les points gagnés ou perdus
+
+        IF (nombre_taches_termines + nombre_taches_non_termines) > 0 THEN
+            -- Calculer la proportion de tâches terminées sur le total des tâches 
+            -- (terminées + non terminées)
+            DECLARE
+                proportion NUMBER := nombre_taches_termines / 
+                        (nombre_taches_termines + nombre_taches_non_termines);
+            BEGIN
+                -- Selon votre logique métier, vous pouvez définir des règles pour les points gagnés ou perdus
+                -- Par exemple, si plus de la moitié des tâches sont terminées, attribuez des points positifs
+                IF proportion > 0.5 THEN
+                    points_gagnes_perdus := 10; -- Augmentez les points gagnés selon votre logique
+                ELSE
+                    points_gagnes_perdus := -5; -- Réduisez les points gagnés selon votre logique
+                END IF;
+            END;
+        END IF;
 
         -- Mettre à jour le score de l'utilisateur
         UPDATE Utilisateur
