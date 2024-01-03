@@ -184,3 +184,62 @@ BEGIN
 END;
 
 
+
+-- TRIGGER
+-- La valeur de score sera stockée dans une table et mis à jour chaque fois 
+-- qu'une tâche est terminée ou archivée.
+CREATE OR REPLACE TRIGGER maj_score_apres_tache
+AFTER INSERT OR UPDATE OF statut ON Tache_fini
+OR AFTER INSERT OR UPDATE OF statut ON Tache_archivee
+FOR EACH ROW
+DECLARE
+    v_score INT;
+    v_nombre_taches_termines INT;
+    v_nombre_taches_non_termines INT;
+BEGIN
+    -- Initialiser les variables à zéro
+    v_nombre_taches_termines := 0;
+    v_nombre_taches_non_termines := 0;
+
+    -- Calculer le nombre de tâches terminées pour l'utilisateur concerné
+    SELECT COUNT(*) INTO v_nombre_taches_termines
+    FROM Tache_fini
+    WHERE ref_utilisateur = :NEW.ref_utilisateur
+        AND date_realisation >= SYSDATE - 7;
+
+    -- Calculer le nombre de tâches non terminées pour l'utilisateur concerné
+    SELECT COUNT(*) INTO v_nombre_taches_non_termines
+    FROM Tache_en_cours
+    WHERE ref_utilisateur = :NEW.ref_utilisateur
+        AND date_d_echeance >= SYSDATE - 7
+        AND statut != 'Terminé';
+
+    -- Calculer le score pour la tâche terminée ou archivée
+    IF (v_nombre_taches_termines + v_nombre_taches_non_termines) > 0 THEN
+        IF (v_nombre_taches_termines / (v_nombre_taches_termines + v_nombre_taches_non_termines)) > 0.5 THEN
+            -- Si plus de la moitié des tâches sont terminées, on attribue 10 points.
+            v_score := 10;
+        ELSE
+            -- Sinon, on retire 5 points.
+            v_score := -5;
+        END IF;
+    ELSE
+        -- Si aucune tâche n'a été effectuée au cours de la semaine, le score reste inchangé.
+        v_score := 0;
+    END IF;
+
+    -- Stocker ou mettre à jour le score dans une table dédiée (Score_tache)
+    -- Remplacez cette requête selon la logique de votre base de données pour insérer ou mettre à jour la valeur du score
+    MERGE INTO Score_tache ST
+    USING DUAL
+    ON (ST.ref_tache = :NEW.ref_tache)
+    WHEN MATCHED THEN
+        UPDATE SET ST.score = v_score
+    WHEN NOT MATCHED THEN
+        INSERT (ref_tache, score) VALUES (:NEW.ref_tache, v_score);
+
+    COMMIT;
+END;
+/
+
+
