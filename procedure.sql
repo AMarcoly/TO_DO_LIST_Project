@@ -309,3 +309,35 @@ BEGIN
     COMMIT;
 END;    
 /
+
+-- Pour chaque tâche périodique avec une date de fin ajoutée ou modifiée, définir les tâches
+-- associée (tâche avec une date précise, par exemple une tache périodique réalisée tous les
+-- jours à 10h, dont la fin est prévue dans une semaine provoquera la définition de 7
+-- tâches, prévue sur 7 jours, à 8h).
+CREATE OR REPLACE TRIGGER CreerTachesAssociees
+AFTER INSERT OR UPDATE OF date_fin ON Periodicite
+FOR EACH ROW
+DECLARE
+    v_date_debut TIMESTAMP;
+    v_date_fin TIMESTAMP;
+    v_interval INTERVAL DAY(0) TO SECOND(0);
+    v_ref_tache INT;
+BEGIN
+    IF :NEW.date_fin IS NOT NULL THEN
+        -- Récupérer la date de début et de fin de la tâche périodique
+        SELECT date_debut, :NEW.date_fin INTO v_date_debut, v_date_fin
+        FROM Periodicite
+        WHERE ref_periodicite = :NEW.ref_periodicite;
+
+        -- Calculer l'intervalle entre la date de début et la date de fin
+        v_interval := v_date_fin - v_date_debut;
+
+        -- Insérer les tâches associées pour chaque jour entre la date de début et de fin
+        FOR i IN 0 .. v_interval - INTERVAL '1' DAY LOOP
+            -- Ajouter une tâche associée avec une date précise
+            INSERT INTO Tache_fini (ref_tache, date_realisation, ref_utilisateur, statut, date_d_echeance)
+            VALUES (:NEW.ref_tache, v_date_debut + INTERVAL '1' DAY * i, :NEW.ref_utilisateur, 'Terminé', v_date_debut + INTERVAL '1' DAY * i);
+        END LOOP;
+    END IF;
+END;
+/
