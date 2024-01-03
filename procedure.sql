@@ -55,6 +55,7 @@ BEGIN
         SET score = score + points_gagnes_perdus
         WHERE ref_utilisateur = utilisateur_rec.ref_utilisateur;
     END LOOP;
+    COMMIT;
 END calculer_points_semaine;
 
 
