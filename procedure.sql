@@ -249,6 +249,8 @@ BEGIN
 END;    
 /
 
+-- Le score de l'utilisateur sera mis à jour à chaque fois qu'une tâche est archivée.
+
 CREATE OR REPLACE TRIGGER maj_score_apres_tache_archivee
 AFTER INSERT OR UPDATE OF statut ON Tache_archivee
 FOR EACH ROW
