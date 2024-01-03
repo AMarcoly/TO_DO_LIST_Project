@@ -40,7 +40,8 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
   ```
 
 # Procédures et fonctions PL/SQL
-
+1. On ajoute 10 points aux scores de tous les utilisateurs ayant un programme de score et qui ont terminées plus de 50% de leurs tâches sinon on retire 5 points à leurs scores.
+ 
 2. Afin d'archiver les taches passées, nous devons absolument regarder dans la table `Taches_en_cours` toutes les taches dont la date déchéance est antérieure à la date du jour où la procedure s'execute c'est-à-dire tous les lundis à 8h (Par supposition). Ci-dessus la requete :
 
    ```sql
@@ -62,3 +63,4 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
        COMMIT;
    END;
    ```
+3. 
