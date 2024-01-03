@@ -10,9 +10,15 @@ CREATE OR REPLACE PROCEDURE calculer_points_semaine IS
     nombre_taches_termines INT;
     nombre_taches_non_termines INT;
     points_gagnes_perdus INT;
+    proportion NUMBER;
 BEGIN
     -- Parcourir les utilisateurs ayant un programme de score
     FOR utilisateur_rec IN (SELECT * FROM Utilisateur WHERE nom_programme IS NOT NULL) LOOP
+        -- Initialiser les variables à zéro
+        nombre_taches_termines := 0;
+        nombre_taches_non_termines := 0;
+        points_gagnes_perdus := 0;
+
         -- Calculer le nombre de tâches terminées au cours de la semaine
         SELECT COUNT(*) INTO nombre_taches_termines
         FROM Tache_fini
@@ -27,27 +33,21 @@ BEGIN
             AND statut != 'Terminé';
 
         -- Calculer les points gagnés ou perdus
-
-        -- Le score sera calculé d'après la proportion les taches 
-        --terminées/non terminées
-        points_gagnes_perdus := 0;
-        -- Calculer les points gagnés ou perdus
-
         IF (nombre_taches_termines + nombre_taches_non_termines) > 0 THEN
             -- Calculer la proportion de tâches terminées sur le total des tâches 
             -- (terminées + non terminées)
-            DECLARE
-                proportion NUMBER := nombre_taches_termines / 
-                        (nombre_taches_termines + nombre_taches_non_termines);
-            BEGIN
-                -- Selon votre logique métier, vous pouvez définir des règles pour les points gagnés ou perdus
-                -- Par exemple, si plus de la moitié des tâches sont terminées, attribuez des points positifs
-                IF proportion > 0.5 THEN
-                    points_gagnes_perdus := 10; -- Augmentez les points gagnés selon votre logique
-                ELSE
-                    points_gagnes_perdus := -5; -- Réduisez les points gagnés selon votre logique
-                END IF;
-            END;
+            proportion := nombre_taches_termines / (nombre_taches_termines + nombre_taches_non_termines);
+
+            -- Si plus de la moitié des tâches sont terminées, on attribue 
+            -- des points à l'utilisateur.
+            IF proportion > 0.5 THEN
+                -- On attribue 10 points.
+                points_gagnes_perdus := 10;
+            ELSE
+                -- Sinon, on retire des points à l'utilisateur.
+                -- On retire 5 points.
+                points_gagnes_perdus := -5;
+            END IF;
         END IF;
 
         -- Mettre à jour le score de l'utilisateur
