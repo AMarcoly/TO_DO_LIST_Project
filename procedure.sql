@@ -188,6 +188,8 @@ END;
 -- TRIGGER
 -- La valeur de score sera stockée dans une table et mis à jour chaque fois 
 -- qu'une tâche est terminée ou archivée.
+
+-- Le score de l'utilisateur sera mia à jour à chaque fois qu'une tâche se termine.
 CREATE OR REPLACE TRIGGER maj_score_apres_tache_fini
 AFTER INSERT OR UPDATE OF statut ON Tache_fini
 FOR EACH ROW
@@ -247,4 +249,61 @@ BEGIN
 END;    
 /
 
+CREATE OR REPLACE TRIGGER maj_score_apres_tache_archivee
+AFTER INSERT OR UPDATE OF statut ON Tache_archivee
+FOR EACH ROW
+DECLARE
+    v_score INT;
+    v_nombre_taches_termines INT;
+    v_nombre_taches_non_termines INT;
+    v_programme_score INT;
+BEGIN
+   -- Vérifier si l'utilisateur a un programme de score
+    SELECT COUNT(*)
+    INTO v_programme_score
+    FROM Utilisateur
+    WHERE ref_utilisateur = :NEW.ref_utilisateur
+      AND nom_programme IS NOT NULL;
 
+    -- Si l'utilisateur a un programme de score    
+    IF v_programme_score > 0 THEN
+        -- Initialiser les variables à zéro
+        v_nombre_taches_termines := 0;
+        v_nombre_taches_non_termines := 0;
+
+        -- Calculer le nombre de tâches terminées pour l'utilisateur concerné
+        SELECT COUNT(*) INTO v_nombre_taches_termines
+        FROM Tache_fini
+        WHERE ref_utilisateur = :NEW.ref_utilisateur
+            AND date_realisation >= SYSDATE - 7;
+
+        -- Calculer le nombre de tâches non terminées pour l'utilisateur concerné
+        SELECT COUNT(*) INTO v_nombre_taches_non_termines
+        FROM Tache_en_cours
+        WHERE ref_utilisateur = :NEW.ref_utilisateur
+            AND date_d_echeance >= SYSDATE - 7
+            AND statut != 'Terminé';
+
+        -- Calculer le score pour la tâche terminée ou archivée
+        IF (v_nombre_taches_termines + v_nombre_taches_non_termines) > 0 THEN
+            IF (v_nombre_taches_termines / (v_nombre_taches_termines + v_nombre_taches_non_termines)) > 0.5 THEN
+                -- Si plus de la moitié des tâches sont terminées, on attribue 10 points.
+                v_score := 10;
+            ELSE
+                -- Sinon, on retire 5 points.
+                v_score := -5;
+            END IF;
+        ELSE
+            -- Si aucune tâche n'a été effectuée au cours de la semaine, le score reste inchangé.
+            v_score := 0;
+        END IF;
+
+        -- Stocker ou mettre à jour le score dans une table dédiée (score de la table Utilisateur)
+        UPDATE Utilisateur
+        SET score = score + v_score
+        WHERE ref_utilisateur = :NEW.ref_utilisateur;
+    END IF;
+
+    COMMIT;
+END;    
+/
