@@ -120,7 +120,7 @@ END archiver_taches_passees;
 CREATE OR REPLACE PROCEDURE ArchiverTaches AS
 BEGIN
     -- Utilisation de la date actuelle pour identifier les tâches passées
-    FOR tache IN (SELECT * FROM Tache_en_cours WHERE date_d_echeance < SYSDATE) LOOP
+    FOR tache IN (SELECT * FROM Tache_en_cours WHERE date_d_echeance < SYSDATE AND status = 'En cours') LOOP
         -- Insérer les tâches passées dans la table d'archivage
         INSERT INTO Tache_archivee (ref_tache, intitule, description, priorite, 
                                     url, date_d_echeance, statut, nom_categorie, 
