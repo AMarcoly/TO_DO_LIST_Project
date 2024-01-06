@@ -35,6 +35,7 @@ DROP TABLE Tache_en_cours;
 DROP TABLE Projet;
 
 DROP TABLE Tache_archivee;
+DROP TABLE Tache_associee;
 
 CREATE TABLE Projet (
   PRIMARY KEY (ref_projet),
