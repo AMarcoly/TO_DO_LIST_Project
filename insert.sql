@@ -60,6 +60,14 @@ INSERT INTO Tache (ref_tache) VALUES (1009);
 
 INSERT INTO Tache (ref_tache) VALUES (1010);
 
+INSERT INTO Tache (ref_tache) VALUES (1011);
+INSERT INTO Tache (ref_tache) VALUES (1012);
+INSERT INTO Tache (ref_tache) VALUES (1013);
+INSERT INTO Tache (ref_tache) VALUES (1014);
+INSERT INTO Tache (ref_tache) VALUES (1015);
+INSERT INTO Tache (ref_tache) VALUES (1016);
+
+
 -- Pour la table Periodicite (en jours à secondes)
 INSERT INTO Periodicite (ref_periodicite, date_debut, date_fin, periode)
 VALUES (1, TO_TIMESTAMP('2023-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'),
@@ -94,8 +102,7 @@ VALUES ('Programme 2', 'Cat2');
 INSERT INTO Comporte (nom_programme, ref_score_categorie_tache) 
 VALUES ('Programme 3', 'Cat3');
 
--- Pour la table 
-
+-- Pour la table Liste_Tache
 INSERT INTO Liste_tache (ref_liste, nom_categorie, ref_utilisateur) 
 VALUES (101, 'Catégorie 1', 1);
 INSERT INTO Liste_tache (ref_liste, nom_categorie, ref_utilisateur)
@@ -202,6 +209,16 @@ INSERT INTO Depend_de (ref_tache_1, ref_tache_2) VALUES (1005, 1006);
 -- Pour la table Tache_appartenant_a_liste
 INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
 VALUES (101, 1001);
+INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
+VALUES (101, 1011);
+INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
+VALUES (101, 1012);
+INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
+VALUES (101, 1013);
+INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
+VALUES (101, 1014);
+INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
+VALUES (101, 1015);
 
 -- Insertion 2
 INSERT INTO Tache_appartenant_a_liste (ref_liste, ref_tache)
