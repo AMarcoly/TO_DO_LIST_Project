@@ -59,21 +59,20 @@ GROUP BY
 /*SELECT U.login, U.nom, U.prenom, U.adresse,
        COUNT(DISTINCT EA.ref_tache) AS nb_taches_total,
        COUNT(DISTINCT CASE WHEN TP.ref_tache IS NOT NULL THEN EA.ref_tache END) AS nb_taches_periodiques
-FROM Utilisateur U
-LEFT JOIN Est_assigne EA ON U.ref_utilisateur = EA.ref_utilisateur
-LEFT JOIN Tache_en_cours TE ON EA.ref_tache = TE.ref_tache
-LEFT JOIN Tache_fini TF ON EA.ref_tache = TF.ref_tache
-LEFT JOIN (
-    SELECT DISTINCT ref_tache
-    FROM Tache_en_cours
-    WHERE ref_periodicite IS NOT NULL
-    UNION
-    SELECT DISTINCT ref_tache
-    FROM Tache_fini
-    WHERE ref_periodicite IS NOT NULL
-) TP ON EA.ref_tache = TP.ref_tache
-GROUP BY U.login, U.nom, U.prenom, U.adresse;
-
+        FROM Utilisateur U
+        LEFT JOIN Est_assigne EA ON U.ref_utilisateur = EA.ref_utilisateur
+        LEFT JOIN Tache_en_cours TE ON EA.ref_tache = TE.ref_tache
+        LEFT JOIN Tache_fini TF ON EA.ref_tache = TF.ref_tache
+        LEFT JOIN (
+            SELECT DISTINCT ref_tache
+            FROM Tache_en_cours
+            WHERE ref_periodicite IS NOT NULL
+            UNION
+            SELECT DISTINCT ref_tache
+            FROM Tache_fini
+            WHERE ref_periodicite IS NOT NULL
+        ) TP ON EA.ref_tache = TP.ref_tache
+        GROUP BY U.login, U.nom, U.prenom, U.adresse;
 */
 
 -- 4. Pour chaque tâche, le nombre de tâches qui doivent finir avant qu'elle ne soit exécutée.
