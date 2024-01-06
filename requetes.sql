@@ -1,4 +1,4 @@
--- 1.
+-- 1. Les listes de tâches ayant au moins 5 tâches et appartenant à des utilisateurs habitant en France
 SELECT LT.ref_liste
 FROM Liste_tache LT
 JOIN Tache_appartenant_a_liste TAL ON LT.ref_liste = TAL.ref_liste
@@ -6,7 +6,8 @@ JOIN Utilisateur U ON LT.ref_utilisateur = U.ref_utilisateur
 WHERE U.pays = 'France'
 GROUP BY LT.ref_liste
 HAVING COUNT(TAL.ref_tache) >= 5;
--- 2.
+
+-- 2. Les programmes de tâche ayant le plus de points positifs (somme des points) associés aux tâches terminées.
 SELECT U.nom_programme, SUM(S.score) AS total_points
 FROM Utilisateur U
 INNER JOIN Est_assigne EA ON U.ref_utilisateur = EA.ref_utilisateur
@@ -16,7 +17,7 @@ WHERE S.termine = 'O'
 GROUP BY U.nom_programme
 ORDER BY total_points DESC;
 
--- 3. 
+-- 3. Pour chaque utilisateur, son login, son nom, son prénom, son adresse, son nombre de tâches total (périodique et non-périodique) et son nombre de tâches périodiques total.
 SELECT U.login, U.nom, U.prenom, U.adresse, 
        COUNT(DISTINCT TE.ref_tache) + COUNT(DISTINCT TF.ref_tache) AS nb_taches_total,
        COUNT(DISTINCT TE.ref_tache) AS nb_taches_periodiques
@@ -34,7 +35,7 @@ WHERE
   t.statut <> 'Terminée'
 GROUP BY T.ref_tache;
 
--- 5.
+-- 5. Les 10 utilisateurs ayant gagné le plus de points sur leur score au cours de la semaine courante.
 SELECT U.ref_utilisateur, U.login, U.nom, U.prenom, SUM(SC.score) AS total_points_gagnes
 FROM Utilisateur U
 JOIN Est_assigne EA ON U.ref_utilisateur = EA.ref_utilisateur
