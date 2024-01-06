@@ -165,6 +165,19 @@ CREATE TABLE Tache_archivee (
     date_realisation   TIMESTAMP
 );
 
+CREATE TABLE Tache_associee (
+    ref_tache          INT,
+    intitule           VARCHAR(255),
+    description        VARCHAR(1000),
+    priorite           INT,
+    url                VARCHAR(255),
+    date_d_echeance    TIMESTAMP,
+    statut             VARCHAR(50),
+    nom_categorie      VARCHAR(255),
+    ref_utilisateur    INT,
+    date_realisation   TIMESTAMP
+);
+
 CREATE VIEW Taches AS
   SELECT * FROM Tache_fini
     UNION
