@@ -465,7 +465,7 @@ VALUES (
         ),
         'En cours',
         'Catégorie A',
-        1,
+        4,
         4,
         NULL
     );
@@ -497,7 +497,7 @@ VALUES (
         ),
         'En cours',
         'Catégorie B',
-        2,
+        5,
         5,
         NULL
     );
