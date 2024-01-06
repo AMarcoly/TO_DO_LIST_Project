@@ -33,3 +33,4 @@ prob mais je ne comprends pas où.
 
 Pour la procédure 1 a t on besoin de changer le score? on nous demande de le faire avec le trigger
 Pour la procédure 2 pourquoi 2 procédures qui ont à peu près la même chose?
+Suggestions pour la dernière procédure
