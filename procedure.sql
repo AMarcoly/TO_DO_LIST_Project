@@ -339,5 +339,6 @@ BEGIN
             VALUES (:NEW.ref_tache, v_date_debut + INTERVAL '1' DAY * i, :NEW.ref_utilisateur, 'Terminé', v_date_debut + INTERVAL '1' DAY * i);
         END LOOP;
     END IF;
+    COMMIT;
 END;
 /
