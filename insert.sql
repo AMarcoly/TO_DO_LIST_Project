@@ -504,7 +504,7 @@ VALUES (
 
 -- Pour la table Tache_fini
 INSERT INTO
-    Tache_en_cours (
+    Tache_fini (
         ref_tache,
         intitule,
         description,
@@ -529,7 +529,7 @@ VALUES (
         ),
         'Terminée',
         'Catégorie C',
-        3,
+        6,
         1,
         TO_TIMESTAMP(
             '2023-11-14 15:30:00',
@@ -539,7 +539,7 @@ VALUES (
 
 -- Insertion 2
 INSERT INTO
-    Tache_en_cours (
+    Tache_fini (
         ref_tache,
         intitule,
         description,
@@ -564,7 +564,7 @@ VALUES (
         ),
         'Terminée',
         'Catégorie B',
-        2,
+        7,
         2,
         TO_TIMESTAMP(
             '2023-11-20 09:00:00',
@@ -574,7 +574,7 @@ VALUES (
 
 -- Insertion 3
 INSERT INTO
-    Tache_en_cours (
+    Tache_fini (
         ref_tache,
         intitule,
         description,
@@ -599,7 +599,7 @@ VALUES (
         ),
         'Terminée',
         'Catégorie A',
-        1,
+        8,
         3,
         TO_TIMESTAMP(
             '2023-11-25 12:00:00',
@@ -609,7 +609,7 @@ VALUES (
 
 -- Insertion 4
 INSERT INTO
-    Tache_en_cours (
+    Tache_fini (
         ref_tache,
         intitule,
         description,
@@ -634,7 +634,7 @@ VALUES (
         ),
         'Terminée',
         'Catégorie C',
-        3,
+        9,
         4,
         TO_TIMESTAMP(
             '2023-11-30 10:45:00',
@@ -644,7 +644,7 @@ VALUES (
 
 -- Insertion 5
 INSERT INTO
-    Tache_en_cours (
+    Tache_fini (
         ref_tache,
         intitule,
         description,
@@ -669,7 +669,7 @@ VALUES (
         ),
         'Terminée',
         'Catégorie B',
-        2,
+        10,
         5,
         TO_TIMESTAMP(
             '2023-12-05 17:00:00',
