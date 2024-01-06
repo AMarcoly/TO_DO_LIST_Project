@@ -80,7 +80,7 @@ SELECT
 	T.ref_tache,
 	COUNT(DISTINCT DD.ref_tache_1) AS nombre_dependances
 FROM
-	Tache T
+	Taches T
 LEFT JOIN Depend_de DD ON
 	T.ref_tache = DD.ref_tache_2
 WHERE
