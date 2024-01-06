@@ -145,6 +145,7 @@ VALUES (
         'Programme 2'
     );
 
+COMMIT;
 -- Insertion des taches.
 
 INSERT INTO Tache (ref_tache) VALUES (1001);
@@ -178,6 +179,8 @@ INSERT INTO Tache (ref_tache) VALUES (1014);
 INSERT INTO Tache (ref_tache) VALUES (1015);
 
 INSERT INTO Tache (ref_tache) VALUES (1016);
+
+COMMIT;
 
 -- Pour la table Periodicite (en jours à secondes)
 INSERT INTO
@@ -240,6 +243,141 @@ VALUES (
         INTERVAL '3' DAY
     );
 
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        4,
+        TO_TIMESTAMP(
+            '2024-01-02 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '3' DAY
+    );
+
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        5,
+        TO_TIMESTAMP(
+            '2024-01-03 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '3' DAY
+    );
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        6,
+        TO_TIMESTAMP(
+            '2024-01-04 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '3' DAY
+    );
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        7,
+        TO_TIMESTAMP(
+            '2024-01-05 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '3' DAY
+    );
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        8,
+        TO_TIMESTAMP(
+            '2024-01-06 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '1' DAY
+    );
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        9,
+        TO_TIMESTAMP(
+            '2024-01-07 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '4' DAY
+    );
+INSERT INTO
+    Periodicite (
+        ref_periodicite,
+        date_debut,
+        date_fin,
+        periode
+    )
+VALUES (
+        10,
+        TO_TIMESTAMP(
+            '2024-01-08 00:00:00',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        TO_TIMESTAMP(
+            '2024-06-30 23:59:59',
+            'YYYY-MM-DD HH24:MI:SS'
+        ),
+        INTERVAL '2' DAY
+    );
+COMMIT;
 -- Pour la table Score_categorie_tache
 INSERT INTO
     Score_categorie_tache (
@@ -267,7 +405,7 @@ INSERT INTO
         nom_categorie
     )
 VALUES ('Cat3', 'O', 70, 'Catégorie 3');
-
+COMMIT;
 -- Pour la table comporte
 INSERT INTO
     Comporte (
@@ -289,7 +427,7 @@ INSERT INTO
         ref_score_categorie_tache
     )
 VALUES ('Programme 3', 'Cat3');
-
+COMMIT;
 -- Pour la table Liste_Tache
 INSERT INTO
     Liste_tache (
@@ -314,7 +452,7 @@ INSERT INTO
         ref_utilisateur
     )
 VALUES (103, 'Catégorie 3', 3);
-
+COMMIT;
 -- Pour la table Contient
 INSERT INTO
     Contient (nom_projet, ref_liste)
@@ -327,7 +465,7 @@ VALUES ('Projet 2', 102);
 INSERT INTO
     Contient (nom_projet, ref_liste)
 VALUES ('Projet 3', 103);
-
+COMMIT;
 -- Pour la table Est_assigne
 INSERT INTO
     Est_assigne (ref_utilisateur, ref_tache)
@@ -340,7 +478,7 @@ VALUES (2, 1002);
 INSERT INTO
     Est_assigne (ref_utilisateur, ref_tache)
 VALUES (3, 1003);
-
+COMMIT;
 -- Pour la table Tache_en_cours
 -- Insertion 1
 INSERT INTO
@@ -501,7 +639,7 @@ VALUES (
         5,
         NULL
     );
-
+COMMIT;
 -- Pour la table Tache_fini
 INSERT INTO
     Tache_fini (
@@ -676,7 +814,7 @@ VALUES (
             'YYYY-MM-DD HH24:MI:SS'
         )
     );
-
+COMMIT;
 -- Pour la table Travaille.
 -- Insertion 1
 INSERT INTO Travaille (ref_projet, ref_utilisateur) VALUES (1, 1);
@@ -686,14 +824,14 @@ INSERT INTO Travaille (ref_projet, ref_utilisateur) VALUES (2, 2);
 
 -- Insertion 3
 INSERT INTO Travaille (ref_projet, ref_utilisateur) VALUES (3, 3);
-
+COMMIT;
 -- Pour la table Depend_de
 INSERT INTO Depend_de (ref_tache_1, ref_tache_2) VALUES (1001, 1002);
 
 INSERT INTO Depend_de (ref_tache_1, ref_tache_2) VALUES (1003, 1004);
 
 INSERT INTO Depend_de (ref_tache_1, ref_tache_2) VALUES (1005, 1006);
-
+COMMIT;
 -- Pour la table Tache_appartenant_a_liste
 INSERT INTO
     Tache_appartenant_a_liste (ref_liste, ref_tache)
@@ -728,3 +866,4 @@ VALUES (102, 1002);
 INSERT INTO
     Tache_appartenant_a_liste (ref_liste, ref_tache)
 VALUES (103, 1003);
+COMMIT;
