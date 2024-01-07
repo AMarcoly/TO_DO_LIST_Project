@@ -440,3 +440,66 @@ BEGIN
     -- Supprimer la table temporaire
     DROP TABLE temp_suggestions;
 END;
+
+
+CREATE OR REPLACE PROCEDURE GenererSuggestions(
+    p_ref_utilisateur INT := 1,
+    p_nombre_suggestions INT :=1,
+    p_nombre_taches_similaires_min INT :=1,
+    p_nombre_mots_communs_min INT :=1
+)
+IS
+BEGIN
+    -- Table temporaire pour stocker les tâches suggérées
+    CREATE GLOBAL TEMPORARY TABLE temp_suggestions (
+        ref_tache INT,
+        score INT
+    ) ON COMMIT PRESERVE ROWS;
+
+    -- Trouver les utilisateurs similaires
+    FOR utilisateur_rec IN (
+        SELECT ref_utilisateur
+        FROM Est_assigne
+        WHERE ref_tache IN (
+            SELECT ref_tache
+            FROM Est_assigne
+            WHERE ref_utilisateur = p_ref_utilisateur
+        )
+        GROUP BY ref_utilisateur
+        HAVING COUNT(DISTINCT ref_tache) >= p_nombre_taches_similaires_min
+    ) LOOP
+        -- Trouver les tâches similaires avec l'utilisateur courant
+        FOR tache_rec IN (
+            SELECT DISTINCT E.ref_tache
+            FROM Est_assigne E
+            JOIN Est_assigne E_user ON E.ref_tache = E_user.ref_tache
+            WHERE E_user.ref_utilisateur = p_ref_utilisateur
+                AND E.ref_utilisateur = utilisateur_rec.ref_utilisateur
+                AND TacheSimilarite(E.ref_tache, E_user.ref_tache) >= p_nombre_mots_communs_min
+        ) LOOP
+            -- Utiliser MERGE pour mettre à jour ou insérer des lignes dans la table temp_suggestions
+            MERGE INTO temp_suggestions ts
+            USING (SELECT tache_rec.ref_tache FROM dual) src
+            ON (ts.ref_tache = src.ref_tache)
+            WHEN MATCHED THEN
+              UPDATE SET ts.score = ts.score + 1
+            WHEN NOT MATCHED THEN
+              INSERT (ref_tache, score) VALUES (src.ref_tache, 1);
+        END LOOP;
+    END LOOP;
+
+    -- Sélectionner les N tâches les plus suggérées
+    FOR suggestion_rec IN (
+        SELECT ref_tache, score
+        FROM temp_suggestions
+        ORDER BY score DESC
+        FETCH FIRST p_nombre_suggestions ROWS ONLY
+    ) LOOP
+        -- Insérer les suggestions dans la table d'assignation de l'utilisateur
+        INSERT INTO Est_assigne (ref_utilisateur, ref_tache)
+        VALUES (p_ref_utilisateur, suggestion_rec.ref_tache);
+    END LOOP;
+
+    -- Supprimer la table temporaire
+    DROP TABLE temp_suggestions;
+END;
