@@ -1,5 +1,6 @@
 -- Les procédures et les fonctions
 
+-- 1.
 -- Définir une fonction qui calcule le nombre de point gagné/perdu
 -- (pour les utilisateurs ayant un programme de score, 
 -- en fonction du nombre de tâche terminée/non terminée) 
@@ -58,65 +59,9 @@ BEGIN
     COMMIT;
 END calculer_points_semaine;
 
-
+-- 2.
 --   On supposera que la procédure est exécutée chaque semaine (le lundi, à 8h). 
 --  Définir une procédure qui archive toutes les tâches passées.
-
-
-CREATE OR REPLACE PROCEDURE archiver_taches_passees
-AS
-BEGIN
-  -- Définir la date de début de la semaine passée
-  DECLARE date_debut DATE := TRUNC(SYSDATE - INTERVAL 7 DAY, 'IW');
-
-  -- Définir la date de fin de la semaine passée
-  DECLARE date_fin DATE := TRUNC(SYSDATE, 'IW');
-
-  -- Créer une table temporaire pour stocker les tâches à archiver
-  CREATE TABLE tmp_taches_a_archiver
-    (
-      ref_tache NUMBER,
-      nom_categorie VARCHAR2(255)
-    );
-
-  -- Insérer les tâches à archiver dans la table temporaire
-  INSERT INTO tmp_taches_a_archiver
-  (
-    ref_tache,
-    nom_categorie
-  )
-  SELECT
-    T.ref_tache,
-    T.nom_categorie
-  FROM Tache T
-  WHERE T.date_realisation < date_fin;
-
-  -- Archiver les tâches
-  FOR t IN (SELECT * FROM tmp_taches_a_archiver)
-  LOOP
-    -- Archiver la tâche
-    INSERT INTO Tache_archivee
-    (
-      ref_tache,
-      nom_categorie,
-      date_realisation
-    )
-    VALUES
-    (
-      t.ref_tache,
-      t.nom_categorie,
-      t.date_realisation
-    );
-
-    -- Supprimer la tâche de la table `Tache`
-    DELETE FROM Tache
-    WHERE ref_tache = t.ref_tache;
-  END LOOP;
-
-  -- Supprimer la table temporaire
-  DROP TABLE tmp_taches_a_archiver;
-END archiver_taches_passees;
-
 CREATE OR REPLACE PROCEDURE ArchiverTaches AS
 BEGIN
     -- Utilisation de la date actuelle pour identifier les tâches passées
@@ -135,6 +80,18 @@ BEGIN
     COMMIT;
 END;
 
+
+-- 3. 
+-- Ecrire le code PL/SQL permettant de générer des suggestions pour un utilisateur, c’est
+-- dire N tâches qu’il pourrait ajouter à sa liste de tâche. Les tâches suggérées seront les N
+-- tâches apparaissant le plus grand nombre de fois dans les tâches des utilisateurs
+-- similaires. Les utilisateurs similaires sont les utilisateurs ayant au moins X tâches
+-- similaires avec l’utilisateur pour lequel effectuer les suggestions. Des tâches similaires
+-- sont des tâches ayant au moins Y mots communs (dans les mots communs, on ne
+-- compte pas les mots vides/stop words comme les articles ou les verbes peu significatifs
+-- type faire ou avoir)
+
+-- Fonction pour supprimer les mots vides d'une chaîne de caractères.
 CREATE OR REPLACE FUNCTION remove_stop_words(p_text IN VARCHAR2) RETURN VARCHAR2 IS
     stop_words VARCHAR2(1000) := ' le | la | les | de | des | du | en | et | à | un | une | ce | cet | cette | ces | mon | ma | mes | ton | ta | tes | avoir | faire';
     cleaned_text VARCHAR2(1000);
@@ -187,16 +144,16 @@ BEGIN
     END IF;
 END;
 
-
-
-
+---------------------------------------------------------------------------------------------------------------
 
 
 -- TRIGGER
+-- 1.
 -- La valeur de score sera stockée dans une table et mis à jour chaque fois 
 -- qu'une tâche est terminée ou archivée.
 
 -- Le score de l'utilisateur sera mia à jour à chaque fois qu'une tâche se termine.
+
 CREATE OR REPLACE TRIGGER maj_score_apres_tache_fini
 AFTER INSERT OR UPDATE OF statut ON Tache_fini
 FOR EACH ROW
@@ -312,7 +269,7 @@ BEGIN
     END IF;
 END;    
 
-
+-- 2.
 -- Pour chaque tâche périodique avec une date de fin ajoutée ou modifiée, définir les tâches
 -- associée (tâche avec une date précise, par exemple une tache périodique réalisée tous les
 -- jours à 10h, dont la fin est prévue dans une semaine provoquera la définition de 7
@@ -381,167 +338,5 @@ BEGIN
     END IF;
 END;
 
--- suggestions 
-
-CREATE OR REPLACE PROCEDURE GenererSuggestions(
-    p_ref_utilisateur INT,
-    p_nombre_suggestions INT,
-    p_nombre_taches_similaires_min INT,
-    p_nombre_mots_communs_min INT
-)
-IS
-BEGIN
-    -- Table temporaire pour stocker les tâches suggérées
-    CREATE GLOBAL TEMPORARY TABLE temp_suggestions (
-        ref_tache INT,
-        score INT
-    ) ON COMMIT PRESERVE ROWS;
-
-    -- Trouver les utilisateurs similaires
-    FOR utilisateur_rec IN (
-        SELECT ref_utilisateur
-        FROM Est_assigne
-        WHERE ref_tache IN (
-            SELECT ref_tache
-            FROM Est_assigne
-            WHERE ref_utilisateur = p_ref_utilisateur
-        )
-        GROUP BY ref_utilisateur
-        HAVING COUNT(DISTINCT ref_tache) >= p_nombre_taches_similaires_min
-    ) LOOP
-        -- Trouver les tâches similaires avec l'utilisateur courant
-        FOR tache_rec IN (
-            SELECT DISTINCT E.ref_tache
-            FROM Est_assigne E
-            JOIN Est_assigne E_user ON E.ref_tache = E_user.ref_tache
-            WHERE E_user.ref_utilisateur = p_ref_utilisateur
-                AND E.ref_utilisateur = utilisateur_rec.ref_utilisateur
-                AND TacheSimilarite(E.ref_tache, E_user.ref_tache) >= p_nombre_mots_communs_min
-        ) LOOP
-            -- Incrémenter le score des tâches suggérées dans la table temporaire
-            INSERT INTO temp_suggestions (ref_tache, score)
-            VALUES (tache_rec.ref_tache, 1)
-            ON DUPLICATE KEY UPDATE score = score + 1;
-        END LOOP;
-    END LOOP;
-
-    -- Sélectionner les N tâches les plus suggérées
-    FOR suggestion_rec IN (
-        SELECT ref_tache, score
-        FROM temp_suggestions
-        ORDER BY score DESC
-        LIMIT p_nombre_suggestions
-    ) LOOP
-        -- Insérer les suggestions dans la table d'assignation de l'utilisateur
-        INSERT INTO Est_assigne (ref_utilisateur, ref_tache)
-        VALUES (p_ref_utilisateur, suggestion_rec.ref_tache);
-    END LOOP;
-
-    -- Supprimer la table temporaire
-    DROP TABLE temp_suggestions;
-END;
 
 
-CREATE OR REPLACE FUNCTION TacheSimilarite(
-    p_ref_tache1 INT,
-    p_ref_tache2 INT
-) RETURN INT
-IS
-    v_similarite INT := 0;
-BEGIN
-    -- Liste de mots vides à exclure
-    FOR stop_word IN ('le', 'la', 'les', 'de', 'du', 'des', 'un', 'une', 'et', 'ou', 'mais', 'pour', 'par', 'avec', 'à', 'sur') LOOP
-        -- Exclure les mots vides de la similarité
-        v_similarite := v_similarite - (
-            SELECT COUNT(*)
-            FROM (
-                SELECT DISTINCT REGEXP_SUBSTR(description, '\w+', 1, LEVEL) AS mot
-                FROM Tache
-                WHERE ref_tache IN (p_ref_tache1, p_ref_tache2)
-                    AND LOWER(mot) = LOWER(stop_word)
-                CONNECT BY PRIOR ref_tache = ref_tache
-                       AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
-            )
-            WHERE mot IS NOT NULL
-        );
-    END LOOP;
-
-    -- Ajouter la similarité basée sur les mots non vides
-    v_similarite := v_similarite + (
-        SELECT COUNT(*)
-        FROM (
-            SELECT DISTINCT REGEXP_SUBSTR(description, '\w+', 1, LEVEL) AS mot
-            FROM Tache
-            WHERE ref_tache IN (p_ref_tache1, p_ref_tache2)
-                AND mot IS NOT NULL
-            CONNECT BY PRIOR ref_tache = ref_tache
-                   AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
-        )
-        WHERE mot IS NOT NULL
-    );
-
-    RETURN GREATEST(v_similarite, 0); -- Assurez-vous que la similarité est au moins 0
-END;
-
-
-CREATE OR REPLACE PROCEDURE GenererSuggestions(
-    p_ref_utilisateur INT := 1,
-    p_nombre_suggestions INT :=1,
-    p_nombre_taches_similaires_min INT :=1,
-    p_nombre_mots_communs_min INT :=1
-)
-IS
-BEGIN
-    -- Table temporaire pour stocker les tâches suggérées
-    CREATE GLOBAL TEMPORARY TABLE temp_suggestions (
-        ref_tache INT,
-        score INT
-    ) ON COMMIT PRESERVE ROWS;
-
-    -- Trouver les utilisateurs similaires
-    FOR utilisateur_rec IN (
-        SELECT ref_utilisateur
-        FROM Est_assigne
-        WHERE ref_tache IN (
-            SELECT ref_tache
-            FROM Est_assigne
-            WHERE ref_utilisateur = p_ref_utilisateur
-        )
-        GROUP BY ref_utilisateur
-        HAVING COUNT(DISTINCT ref_tache) >= p_nombre_taches_similaires_min
-    ) LOOP
-        -- Trouver les tâches similaires avec l'utilisateur courant
-        FOR tache_rec IN (
-            SELECT DISTINCT E.ref_tache
-            FROM Est_assigne E
-            JOIN Est_assigne E_user ON E.ref_tache = E_user.ref_tache
-            WHERE E_user.ref_utilisateur = p_ref_utilisateur
-                AND E.ref_utilisateur = utilisateur_rec.ref_utilisateur
-                AND TacheSimilarite(E.ref_tache, E_user.ref_tache) >= p_nombre_mots_communs_min
-        ) LOOP
-            -- Utiliser MERGE pour mettre à jour ou insérer des lignes dans la table temp_suggestions
-            MERGE INTO temp_suggestions ts
-            USING (SELECT tache_rec.ref_tache FROM dual) src
-            ON (ts.ref_tache = src.ref_tache)
-            WHEN MATCHED THEN
-              UPDATE SET ts.score = ts.score + 1
-            WHEN NOT MATCHED THEN
-              INSERT (ref_tache, score) VALUES (src.ref_tache, 1);
-        END LOOP;
-    END LOOP;
-
-    -- Sélectionner les N tâches les plus suggérées
-    FOR suggestion_rec IN (
-        SELECT ref_tache, score
-        FROM temp_suggestions
-        ORDER BY score DESC
-        FETCH FIRST p_nombre_suggestions ROWS ONLY
-    ) LOOP
-        -- Insérer les suggestions dans la table d'assignation de l'utilisateur
-        INSERT INTO Est_assigne (ref_utilisateur, ref_tache)
-        VALUES (p_ref_utilisateur, suggestion_rec.ref_tache);
-    END LOOP;
-
-    -- Supprimer la table temporaire
-    DROP TABLE temp_suggestions;
-END;
