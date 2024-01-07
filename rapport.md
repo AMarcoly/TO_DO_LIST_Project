@@ -38,6 +38,7 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
   CREATE INDEX idx_score_cat_tache_nom_cat ON Score_categorie_tache(nom_categorie);
   CREATE INDEX idx_est_assigne_ref_utilisateur ON Est_assigne(ref_utilisateur);
   ```
+  Cependant, vous remarquerez que le fichier `index.sql` nous avons commenté les index `idx_tache_fini_date_realisation` et `idx_score_cat_tache_nom_cat` car ils sont déjà crée ci-haut dans `index.sql`.
 
 # Procédures et fonctions PL/SQL
 1. On ajoute 10 points aux scores de tous les utilisateurs ayant un programme de score et qui ont terminées plus de 50% de leurs tâches sinon on retire 5 points à leurs scores. Cependant afin que la procedure puisse faire des mis à jour de score il faudra s'assurer que la tâche a été réalisée dans la semaine courante.
