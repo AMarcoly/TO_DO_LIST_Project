@@ -338,46 +338,6 @@ BEGIN
     END IF;
 END;
 
-
-/*
-CREATE OR REPLACE TRIGGER CreerTachesAssociees
-AFTER INSERT OR UPDATE OF date_fin ON Periodicite
-FOR EACH ROW
-DECLARE
-    v_date_debut TIMESTAMP;
-    v_date_fin TIMESTAMP;
-    v_heure_realisation INT;
-    v_ref_tache INT;
-    v_current_date TIMESTAMP;
-BEGIN
-    IF :NEW.date_fin IS NOT NULL THEN
-        -- Récupérer la date de début, la date de fin et l'heure de réalisation quotidienne de la tâche périodique
-        SELECT date_debut, :NEW.date_fin, EXTRACT(HOUR FROM :NEW.heure_realisation) INTO v_date_debut, v_date_fin, v_heure_realisation
-        FROM Periodicite
-        WHERE ref_periodicite = :NEW.ref_periodicite;
-
-        -- Initialiser la date courante à la date de début
-        v_current_date := v_date_debut;
-
-        -- Insérer les tâches associées pour chaque jour entre la date de début et de fin
-        WHILE v_current_date <= v_date_fin LOOP
-            -- Calculer la date et l'heure de réalisation précise
-            v_current_date := TO_TIMESTAMP(TO_CHAR(v_current_date, 'YYYY-MM-DD') || ' ' || v_heure_realisation || ':00:00', 'YYYY-MM-DD HH24:MI:SS');
-
-            -- Ajouter une tâche associée avec une date précise
-            INSERT INTO Tache_fini (ref_tache, date_realisation, ref_utilisateur, statut, date_d_echeance)
-            VALUES (:NEW.ref_tache, v_current_date, :NEW.ref_utilisateur, 'Terminé', v_current_date);
-
-            -- Incrémenter la date courante d'un jour
-            v_current_date := v_current_date + INTERVAL '1' DAY;
-        END LOOP;
-    END IF;
-END;
-
-*/
--- Mais pourquoi faire l'insertion dans la table tahe  fini? la tache va venir et n'est pas encore réalisée.
-
-
 -- Pour chaque tâche périodique avec une date de fin ajoutée ou modifiée, définir les tâches associée
 CREATE OR REPLACE TRIGGER creer_taches_associees
 AFTER INSERT OR UPDATE OF date_fin ON Periodicite
