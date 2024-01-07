@@ -381,6 +381,70 @@ END;
 */
 -- Mais pourquoi faire l'insertion dans la table tahe  fini? la tache va venir et n'est pas encore réalisée.
 
+
+-- Pour chaque tâche périodique avec une date de fin ajoutée ou modifiée, définir les tâches associée
+CREATE OR REPLACE TRIGGER creer_taches_associees
+AFTER INSERT OR UPDATE OF date_fin ON Periodicite
+FOR EACH ROW
+DECLARE
+    v_ref_periodicite Periodicite.ref_periodicite%TYPE;
+    v_tache_details Tache_en_cours%ROWTYPE; -- Modifier avec le nom de la table appropriée
+    v_interval INTERVAL DAY TO SECOND;
+    v_nb_jours NUMBER;
+    v_current_ref_periodicite Periodicite.ref_periodicite%TYPE;
+    v_current_date TIMESTAMP;
+
+BEGIN
+    IF :NEW.date_fin IS NOT NULL THEN
+        IF INSERTING THEN 
+            v_current_ref_periodicite := :NEW.ref_periodicite;
+        ELSIF UPDATING THEN
+            v_current_ref_periodicite := :OLD.ref_periodicite;
+        END IF;
+
+        -- Récupérer les détails de la tâche périodique
+        SELECT * INTO v_tache_details
+        FROM Tache_en_cours  -- Modifier avec le nom de la table appropriée
+        WHERE ref_periodicite = v_current_ref_periodicite;
+
+        -- Initialiser la date courante à la date de début
+        v_current_date := :OLD.date_debut;
+
+        -- Insérer les tâches associées pour chaque jour entre la date de début et de fin
+        WHILE v_current_date <= :NEW.date_fin LOOP
+        
+            -- Ajouter une tâche associée avec une date précise
+            INSERT INTO
+        Tache_associee (
+            ref_tache,
+            intitule,
+            description,
+            priorite,
+            url,
+            date_d_echeance,
+            statut,
+            nom_categorie,
+            ref_utilisateur,
+            date_realisation
+        )
+        VALUES (
+            v_tache_details.ref_tache,
+            v_tache_details.intitule,
+            v_tache_details.description,
+            v_tache_details.priorite,
+            v_tache_details.url,
+            v_current_date,
+            'En cours',
+            v_tache_details.nom_categorie,
+            v_tache_details.ref_utilisateur,
+            NULL
+        );
+            -- Incrémenter la date courante d'un jour
+            v_current_date := v_current_date + :OLD.periode;
+        END LOOP;
+    END IF;
+END;
+
 -- suggestions 
 
 CREATE OR REPLACE PROCEDURE GenererSuggestions(
