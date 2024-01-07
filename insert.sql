@@ -481,11 +481,31 @@ VALUES (3, 1003);
 
 INSERT INTO
     Est_assigne (ref_utilisateur, ref_tache)
-VALUES (4, 1006);
+VALUES (4, 1004);
 
 INSERT INTO
     Est_assigne (ref_utilisateur, ref_tache)
-VALUES (5, 1007);
+VALUES (5, 1005);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (1, 1006);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (2, 1007);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (3, 1008);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (4, 1009);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (5, 1010);
 COMMIT;
 -- Pour la table Tache_en_cours
 -- Insertion 1
