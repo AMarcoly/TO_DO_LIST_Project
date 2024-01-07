@@ -478,6 +478,14 @@ VALUES (2, 1002);
 INSERT INTO
     Est_assigne (ref_utilisateur, ref_tache)
 VALUES (3, 1003);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (4, 1006);
+
+INSERT INTO
+    Est_assigne (ref_utilisateur, ref_tache)
+VALUES (5, 1007);
 COMMIT;
 -- Pour la table Tache_en_cours
 -- Insertion 1
@@ -662,7 +670,7 @@ VALUES (
         2,
         'http://example.com',
         TO_TIMESTAMP(
-            '2023-11-15 23:59:59',
+            '2024-11-15 23:59:59',
             'YYYY-MM-DD HH24:MI:SS'
         ),
         'Terminée',
@@ -670,7 +678,7 @@ VALUES (
         6,
         1,
         TO_TIMESTAMP(
-            '2023-11-14 15:30:00',
+            '2024-01-05 15:30:00',
             'YYYY-MM-DD HH24:MI:SS'
         )
     );
