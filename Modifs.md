@@ -24,12 +24,14 @@ prob mais je ne comprends pas où.
 - Modif 06-01
 
   - test requete 1 ; attendu : tache 101 sortie : tache 101 ok
-  - test requete 2 ; attendu : sortie:
-  - test requete 3 : attndu : sortie:
-  - test requete 4 : notre table tache n'a pas de colonne valide
-  - test requete 5 : aucun exemple à mettre
+  - test requete 2 ; attendu : 160 sortie: 160
+  - test requete 3 : attndu : Chaque utlisateur a une tache sortie: chaque utilisateur 1 tache
+  - test requete 4 : attendu : tache 1004 et 1002 ont chacune 1 dépendance sortie: tache 1004 et 1002 ont chacune une dépendance
+  - test requete 5 :
+    Les gistoires de dates à mettre sur le rapport
 
-  Il faut créer des tahes non périodiques pour les users
+  - test procedure 1: efectué
+    Il faut créer des tahes non périodiques pour les users
 
 Pour la procédure 1 a t on besoin de changer le score? on nous demande de le faire avec le trigger
 Pour la procédure 2 pourquoi 2 procédures qui ont à peu près la même chose?
