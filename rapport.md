@@ -63,7 +63,8 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
 
 2. Afin d'archiver les taches passées, nous devons absolument regarder dans la table `Taches_en_cours` toutes les taches dont la date déchéance est antérieure à la date du jour où la procedure s'execute c'est-à-dire tous les lundis à 8h (Par supposition).
 
-3.
+3. On a d'abord créé une procédure remove_stop_words afin de ne pas prendre en compte les mots stops dans la requête. Fonction qui sera appalé dans la fonction SuggestionsTaches.
+   Cette fonction regarde pour un utilisateur donné s'il peut lui suggérer des taches à réaliser qui se rapproche de critères prédéfinis par nous.
 
 ## Déclencheurs
 
