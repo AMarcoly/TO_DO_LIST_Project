@@ -658,7 +658,7 @@ VALUES (
         1,
         'http://example.com',
         TO_TIMESTAMP(
-            '2023-12-31 23:59:59',
+            '2024-01-31 23:59:59',
             'YYYY-MM-DD HH24:MI:SS'
         ),
         'En cours',
