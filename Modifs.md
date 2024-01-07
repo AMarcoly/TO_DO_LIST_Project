@@ -36,3 +36,6 @@ prob mais je ne comprends pas où.
 Pour la procédure 1 a t on besoin de changer le score? on nous demande de le faire avec le trigger
 Pour la procédure 2 pourquoi 2 procédures qui ont à peu près la même chose?
 Suggestions pour la dernière procédure
+
+
+J'ai dû créer une autre table Table_associee mais sans la colonne `ref_periodicite` vu que ça sera des taches individuelles pour pouvoir stocker les nouvelles tâches. Il est impossible d'utiliser la table Tache_en_cours car primo la colonne ref_periodicite est `NOT NULL` et deuzio s'il faut utiliser cette colonne on aura plusieurs tâches qui auront la même `ref_periodicite` dans ce cas les cardinalités des rélations ne seront pas respectées. C'est pourquoi j'ai décidé de créer une autre table.
