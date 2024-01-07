@@ -386,7 +386,7 @@ INSERT INTO
         score,
         nom_categorie
     )
-VALUES ('Cat1', 'O', 85, 'Catégorie 1');
+VALUES ('Cat1', 'O', 85, 'Catégorie A');
 
 INSERT INTO
     Score_categorie_tache (
@@ -395,7 +395,7 @@ INSERT INTO
         score,
         nom_categorie
     )
-VALUES ('Cat2', 'O', 90, 'Catégorie 2');
+VALUES ('Cat2', 'O', 90, 'Catégorie B');
 
 INSERT INTO
     Score_categorie_tache (
@@ -404,7 +404,7 @@ INSERT INTO
         score,
         nom_categorie
     )
-VALUES ('Cat3', 'O', 70, 'Catégorie 3');
+VALUES ('Cat3', 'O', 70, 'Catégorie C');
 COMMIT;
 -- Pour la table comporte
 INSERT INTO
@@ -435,7 +435,7 @@ INSERT INTO
         nom_categorie,
         ref_utilisateur
     )
-VALUES (101, 'Catégorie 1', 1);
+VALUES (101, 'Catégorie A', 1);
 
 INSERT INTO
     Liste_tache (
@@ -443,7 +443,7 @@ INSERT INTO
         nom_categorie,
         ref_utilisateur
     )
-VALUES (102, 'Catégorie 2', 2);
+VALUES (102, 'Catégorie B', 2);
 
 INSERT INTO
     Liste_tache (
@@ -451,7 +451,7 @@ INSERT INTO
         nom_categorie,
         ref_utilisateur
     )
-VALUES (103, 'Catégorie 3', 3);
+VALUES (103, 'Catégorie C', 3);
 COMMIT;
 -- Pour la table Contient
 INSERT INTO
