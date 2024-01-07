@@ -40,7 +40,7 @@ BEGIN
 
             -- Si plus de la moitié des tâches sont terminées, on attribue 
             -- des points à l'utilisateur.
-            IF proportion > 0.5 THEN
+            IF proportion >= 0.5 THEN
                 -- On attribue 10 points.
                 points_gagnes_perdus := 10;
             ELSE
