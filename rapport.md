@@ -45,3 +45,8 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
 2. Afin d'archiver les taches passées, nous devons absolument regarder dans la table `Taches_en_cours` toutes les taches dont la date déchéance est antérieure à la date du jour où la procedure s'execute c'est-à-dire tous les lundis à 8h (Par supposition).
 
 3. 
+
+# Déclencheurs
+1. Pour ce déclencheur, nous avons deux corps identiques mais avec un prototype différent, on a avait pensé à utiliser qu'un seul déclencheur qui attend qu'une tâche soit terminée ou archivée mais ORACLE ne supporte pas cette façon de le faire, raison pour laquelle nous avons utilisé deux déclencheurs.
+
+2. On dû créer une autre table Table_associee mais sans la colonne `ref_periodicite` vu que ça sera des taches individuelles pour pouvoir stocker les nouvelles tâches. Il est impossible d'utiliser la table Tache_en_cours car primo la colonne ref_periodicite est `NOT NULL` et deuzio s'il faut utiliser cette colonne on aura plusieurs tâches qui auront la même `ref_periodicite` dans ce cas les cardinalités des relations ne seront pas respectées. C'est pourquoi nous avons décidé de créer une autre table `Tache_associee`.
