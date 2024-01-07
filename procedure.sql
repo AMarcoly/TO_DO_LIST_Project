@@ -442,6 +442,48 @@ BEGIN
 END;
 
 
+CREATE OR REPLACE FUNCTION TacheSimilarite(
+    p_ref_tache1 INT,
+    p_ref_tache2 INT
+) RETURN INT
+IS
+    v_similarite INT := 0;
+BEGIN
+    -- Liste de mots vides à exclure
+    FOR stop_word IN ('le', 'la', 'les', 'de', 'du', 'des', 'un', 'une', 'et', 'ou', 'mais', 'pour', 'par', 'avec', 'à', 'sur') LOOP
+        -- Exclure les mots vides de la similarité
+        v_similarite := v_similarite - (
+            SELECT COUNT(*)
+            FROM (
+                SELECT DISTINCT REGEXP_SUBSTR(description, '\w+', 1, LEVEL) AS mot
+                FROM Tache
+                WHERE ref_tache IN (p_ref_tache1, p_ref_tache2)
+                    AND LOWER(mot) = LOWER(stop_word)
+                CONNECT BY PRIOR ref_tache = ref_tache
+                       AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
+            )
+            WHERE mot IS NOT NULL
+        );
+    END LOOP;
+
+    -- Ajouter la similarité basée sur les mots non vides
+    v_similarite := v_similarite + (
+        SELECT COUNT(*)
+        FROM (
+            SELECT DISTINCT REGEXP_SUBSTR(description, '\w+', 1, LEVEL) AS mot
+            FROM Tache
+            WHERE ref_tache IN (p_ref_tache1, p_ref_tache2)
+                AND mot IS NOT NULL
+            CONNECT BY PRIOR ref_tache = ref_tache
+                   AND PRIOR DBMS_RANDOM.VALUE IS NOT NULL
+        )
+        WHERE mot IS NOT NULL
+    );
+
+    RETURN GREATEST(v_similarite, 0); -- Assurez-vous que la similarité est au moins 0
+END;
+
+
 CREATE OR REPLACE PROCEDURE GenererSuggestions(
     p_ref_utilisateur INT := 1,
     p_nombre_suggestions INT :=1,
