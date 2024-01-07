@@ -245,8 +245,6 @@ BEGIN
         SET score = score + v_score
         WHERE ref_utilisateur = :NEW.ref_utilisateur;
     END IF;
-
-    COMMIT;
 END;    
 
 
@@ -306,8 +304,6 @@ BEGIN
         SET score = score + v_score
         WHERE ref_utilisateur = :NEW.ref_utilisateur;
     END IF;
-
-    COMMIT;
 END;    
 
 
