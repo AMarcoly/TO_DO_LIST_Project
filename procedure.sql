@@ -154,35 +154,41 @@ BEGIN
     RETURN TRIM(cleaned_text);
 END;
 
-
-CREATE OR REPLACE FUNCTION SuggestionsTaches(p_utilisateur_actuel INT) RETURN sys_refcursor IS
+create or replace PROCEDURE SuggestionsTaches(p_utilisateur_actuel INT) IS
     v_utilisateur_actuel INT := p_utilisateur_actuel; -- ID de l'utilisateur actuel
-    v_X INT := 5; -- Nombre minimum de tâches similaires pour considérer un utilisateur comme similaire
-    v_Y INT := 3; -- Nombre minimum de mots en commun pour considérer des tâches comme similaires
-    v_N INT := 10; -- Nombre de tâches suggérées
-
-    v_cursor sys_refcursor;
+    v_X INT := 1; -- Nombre minimum de tâches similaires pour considérer un utilisateur comme similaire
+    v_Y INT := 1; -- Nombre minimum de mots en commun pour considérer des tâches comme similaires
+    v_N INT := 2; -- Nombre de tâches suggérées
+    v_taches_trouvees BOOLEAN := FALSE; -- Variable pour suivre si des tâches ont été trouvées ou non
 
 BEGIN
-    -- Étape 1 : Identifiez les utilisateurs similaires
-    -- Code pour récupérer les utilisateurs similaires (par ex., avec une requête SQL)
-    -- Utilisation de v_utilisateur_actuel dans la requête pour trouver des utilisateurs similaires
-    
-    -- Étape 2 : Comptez les occurrences des tâches pour les utilisateurs similaires
-    -- Code pour compter les occurrences des tâches parmi les utilisateurs similaires
-    
-    -- Étape 3 : Sélectionnez les N tâches les plus fréquentes
-    -- Code pour sélectionner les N tâches les plus fréquentes parmi celles partagées par les utilisateurs similaires
-    
-    -- Affichage ou traitement des suggestions de tâches
-    -- Code pour afficher ou utiliser les tâches suggérées
-    
-    -- Renvoyer un curseur avec les résultats des suggestions de tâches
-    OPEN v_cursor FOR
-        SELECT * FROM table_resultats; -- Remplacez par la table appropriée pour les suggestions
+    -- Étape 1 : Identifiez les utilisateurs similaires en utilisant la fonction TrouverUtilisateursSimilaires
+    FOR suggested_task IN (
+        SELECT DISTINCT T1.ref_tache -- Adapter cette partie à votre scénario spécifique pour sélectionner les tâches suggérées
+        FROM Tache_fini T1
+        JOIN Tache_fini T2 ON T1.ref_utilisateur <> T2.ref_utilisateur -- Comparaison entre différentes tâches
+            AND T1.ref_utilisateur = v_utilisateur_actuel
+            AND T1.ref_tache <> T2.ref_tache
+            AND REGEXP_COUNT(remove_stop_words(T1.description), '\S+') - 
+                REGEXP_COUNT(remove_stop_words(T1.description) || ' ' || remove_stop_words(T2.description), '\S+') >= v_Y
+        JOIN Utilisateur U1 ON U1.ref_utilisateur = T1.ref_utilisateur
+        JOIN Utilisateur U2 ON U2.ref_utilisateur = T2.ref_utilisateur
+        GROUP BY T1.ref_tache
+        HAVING COUNT(*) >= v_X
+        ORDER BY COUNT(*) DESC
+    ) LOOP
+        DBMS_OUTPUT.PUT_LINE('Tâche suggérée : ' || suggested_task.ref_tache); -- Affichage de la tâche suggérée
+        v_taches_trouvees := TRUE; -- Marquer qu'au moins une tâche a été trouvée
+    END LOOP;
 
-    RETURN v_cursor;
+    -- Si aucune tâche n'a été trouvée, afficher un message approprié
+    IF NOT v_taches_trouvees THEN
+        DBMS_OUTPUT.PUT_LINE('Aucune tâche à suggérer trouvée');
+    END IF;
 END;
+
+
+
 
 
 
@@ -311,32 +317,6 @@ END;
 -- associée (tâche avec une date précise, par exemple une tache périodique réalisée tous les
 -- jours à 10h, dont la fin est prévue dans une semaine provoquera la définition de 7
 -- tâches, prévue sur 7 jours, à 8h).
-CREATE OR REPLACE TRIGGER CreerTachesAssociees
-AFTER INSERT OR UPDATE OF date_fin ON Periodicite
-FOR EACH ROW
-DECLARE
-    v_date_debut TIMESTAMP;
-    v_date_fin TIMESTAMP;
-    v_interval INTERVAL DAY(0) TO SECOND(0);
-    v_ref_tache INT;
-BEGIN
-    IF :NEW.date_fin IS NOT NULL THEN
-        -- Récupérer la date de début et de fin de la tâche périodique
-        SELECT date_debut, :NEW.date_fin INTO v_date_debut, v_date_fin
-        FROM Periodicite
-        WHERE ref_periodicite = :NEW.ref_periodicite;
-
-        -- Calculer l'intervalle entre la date de début et la date de fin
-        v_interval := v_date_fin - v_date_debut;
-
-        -- Insérer les tâches associées pour chaque jour entre la date de début et de fin
-        FOR i IN 0 .. v_interval - INTERVAL '1' DAY LOOP
-            -- Ajouter une tâche associée avec une date précise
-            INSERT INTO Tache_fini (ref_tache, date_realisation, ref_utilisateur, statut, date_d_echeance)
-            VALUES (:NEW.ref_tache, v_date_debut + INTERVAL '1' DAY * i, :NEW.ref_utilisateur, 'Terminé', v_date_debut + INTERVAL '1' DAY * i);
-        END LOOP;
-    END IF;
-END;
 
 -- Pour chaque tâche périodique avec une date de fin ajoutée ou modifiée, définir les tâches associée
 CREATE OR REPLACE TRIGGER creer_taches_associees
