@@ -54,27 +54,27 @@ En effet, l'efficacité réelle des index dépend de plusieurs facteurs, notamme
 
 ## Définition de contraintes intégrité
 
-1. `CONTRAINTE FK_COMPORTE_REFSCORE_CATEGORIE` sur la table Comporte :
+1. `CONTRAINTE FK_COMPORTE_REFSCORE_CATEGORIE` sur la table `Comporte` :
    Cette contrainte assure que la colonne ref_score_categorie_tache de la table Comporte est une clé étrangère 
    qui fait référence à la colonne ref_score_categorie_tache de la table Score_categorie_tache.
 
-2. `CONTRAINTE FK_CONTIENT_REFLISTE` sur la table Contient :
+2. CONTRAINTE `FK_CONTIENT_REFLISTE` sur la table `Contient` :
    Cette contrainte garantit que la colonne ref_liste de la table Contient est une clé étrangère 
    faisant référence à la colonne ref_liste de la table Liste_tache.
 
-3. `CONTRAINTE FK_DEPEND_RETACHE1` et `FK_DEPEND_RETACHE2` sur la table Depend_de :
+3. CONTRAINTE `FK_DEPEND_RETACHE1` et `FK_DEPEND_RETACHE2` sur la table `Depend_de` :
    Ces contraintes assurent que les colonnes ref_tache_2 et ref_tache_1 de la table Depend_de sont des clés étrangères 
    référençant la colonne ref_tache de la table Tache.
 
-4. `CONTRAINTE FK_EST_ASSIGNE_REFTACHE` et `FK_EST_ASSIGNE_REFUTILISATEUR` sur la table Est_assigne :
+4. CONTRAINTE `FK_EST_ASSIGNE_REFTACHE` et `FK_EST_ASSIGNE_REFUTILISATEUR` sur la table `Est_assigne` :
    Ces contraintes garantissent que les colonnes ref_tache et ref_utilisateur de la table Est_assigne sont des clés étrangères 
    faisant référence respectivement aux colonnes ref_tache et ref_utilisateur de la table Utilisateur.
 
-5. `CONTRAINTE FK_LISTETACHE_REFUTILISATEUR `sur la table Liste_tache :
+5. CONTRAINTE `FK_LISTETACHE_REFUTILISATEUR `sur la table `Liste_tache` :
    Cette contrainte assure que la colonne ref_utilisateur de la table Liste_tache est une clé étrangère 
    référençant la colonne ref_utilisateur de la table Utilisateur.
 
-6. `CONTRAINTE FK_TACHE_FINI_REF`, `FK_TACHE_FINI_REF_REFUTILISATEUR` et `FK_TACHE_FINI_REFPERIODICITE` sur la table `Tache_fini` :
+6. CONTRAINTE `FK_TACHE_FINI_REF`, `FK_TACHE_FINI_REF_REFUTILISATEUR` et `FK_TACHE_FINI_REFPERIODICITE` sur la table `Tache_fini` :
    Ces contraintes garantissent que les colonnes ref_tache, ref_utilisateur et ref_periodicite de la table Tache_fini sont des clés étrangères 
    faisant référence respectivement aux colonnes ref_tache, ref_utilisateur et ref_periodicite des tables Tache, Utilisateur et Periodicite.
 
